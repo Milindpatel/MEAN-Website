@@ -1,13 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
+var ctrlHotels = require('../controllers/hotels.controllers.js');
+
 router
-    .route('/json')
-    .get(function(req,res){
-        console.log("GET the json");
-        res
-            .status(200)
-            .json({"jsonData" : true});
-    });
+    .route('/hotels')
+    .get(ctrlHotels.hotelsGetAll);
 
 module.exports = router;
