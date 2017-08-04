@@ -22,7 +22,7 @@ module.exports.hotelsGetAll = function(req,res){
 
 module.exports.hotelsGetOne = function(req,res){
     var hotelId = req.params.hotelId;
-    var thisHotel = hotelData[hotelId];
+    var thisHotel = hotelData[2];
     console.log("GET hotelId", hotelId);
         res
             .status(200)
