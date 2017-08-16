@@ -22,7 +22,11 @@
   "homepage": "https://github.com/Milindpatel/mean-stack-app#readme",
   "dependencies": {
     "body-parser": "^1.17.2",
-    "express": "^4.15.3"
+    "express": "^4.15.3",
+    "mongod": "^2.0.0",
+    "mongodb": "^2.2.31",
+    "mongoose": "^4.11.7",
+    "mongose": "0.0.2-security"
   },
   "devDependencies": {
     "mocha": "^3.4.2"
