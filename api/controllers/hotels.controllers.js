@@ -29,7 +29,7 @@ var runGeoQuery = function(req, res){
 };
 
 module.exports.hotelsGetAll = function(req, res) {
-
+  console.log('Requested by : ' + req.user);
   var offset = 0;
   var count = 5;
   var maxCount = 10;

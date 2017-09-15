@@ -16,5 +16,10 @@ function config($routeProvider) {
      controllerAs : 'vm'
      
    })
+   .when('/register', {
+     templateUrl : 'angular-app/register/register.html',
+     controller : RegisterController,
+     controllerAs : 'vm'
+   });
 }
 
