@@ -1,33 +1,34 @@
-require('./api/data/db.js');
-var express = require('express');
-var app = express();
-var path = require('path');
-var bodyParser = require('body-parser');
+const path = require('node:path');
+const express = require('express');
+const mongoose = require('mongoose');
+const routes = require('./api/routes');
 
-var routes = require('./api/routes');
+/** Builds the Express app: JSON API under /api and the Angular app from public/. */
+function createApp(config) {
+  const app = express();
+  app.disable('x-powered-by');
+  app.use(express.json({ limit: '100kb' }));
 
-// Define the port to run on
-app.set('port', 3000);
+  app.use('/api', routes(config));
+  app.use('/api', (req, res) => res.status(404).json({ message: 'Not found' }));
 
-// Add middleware to console log every request
-app.use(function(req, res, next) {
-  console.log(req.method, req.url);
-  next(); 
-});
+  const publicDir = path.join(__dirname, 'public');
+  app.use(express.static(publicDir));
+  // Client-side routes (e.g. /hotels/123) fall back to the Angular app.
+  app.get('/{*path}', (req, res, next) =>
+    res.sendFile(path.join(publicDir, 'index.html'), (err) => err && next()),
+  );
 
-// Set static directory before defining routes
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/node_module', express.static(__dirname + '/node_modules'));
+  // eslint-disable-next-line no-unused-vars
+  app.use((err, req, res, next) => {
+    if (err instanceof mongoose.Error.CastError) return res.status(404).json({ message: 'Not found' });
+    if (err instanceof mongoose.Error.ValidationError) return res.status(400).json({ message: err.message });
+    if (err.type === 'entity.parse.failed') return res.status(400).json({ message: 'Invalid JSON' });
+    console.error(err);
+    return res.status(500).json({ message: 'Server error' });
+  });
 
-// Enable parsing of posted forms
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+  return app;
+}
 
-// Add some routing
-app.use('/api', routes);
-
-// Listen for requests
-var server = app.listen(app.get('port'), function() {
-  var port = server.address().port;
-  console.log('Magic happens on port ' + port);
-});
+module.exports = { createApp };

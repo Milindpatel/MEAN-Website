@@ -1,33 +1,29 @@
 {
-  "name": "mean-app",
-  "version": "1.0.0",
-  "description": "MEAN stack application",
-  "main": "app.js",
+  "name": "mean-hotel",
+  "version": "2.0.0",
+  "description": "MEAN stack hotel reviews app (MongoDB, Express, Angular, Node.js)",
+  "private": true,
+  "main": "server.js",
+  "engines": {
+    "node": ">=22.22.3"
+  },
   "scripts": {
-    "start": "node app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js",
+    "seed": "node scripts/seed.js",
+    "build": "npm --prefix client run build",
+    "test": "vitest run"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Milindpatel/mean-stack-app.git"
-  },
-  "keywords": [
-    "mean"
-  ],
   "author": "Milind Patel",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Milindpatel/mean-stack-app/issues"
-  },
-  "homepage": "https://github.com/Milindpatel/mean-stack-app#readme",
   "dependencies": {
-    "body-parser": "^1.17.2",
-    "express": "^4.15.3",
-    "mongod": "^2.0.0",
-    "mongodb": "^2.2.31",
-    "mongoose": "^4.11.7"
+    "bcryptjs": "^3.0.3",
+    "express": "^5.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^9.11.4"
   },
   "devDependencies": {
-    "mocha": "^3.4.2"
+    "mongodb-memory-server": "^11.3.0",
+    "supertest": "^7.3.1",
+    "vitest": "^5.0.5"
   }
 }

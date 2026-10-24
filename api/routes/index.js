@@ -1,41 +1,30 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const hotels = require('../controllers/hotels.controllers');
+const reviews = require('../controllers/reviews.controllers');
+const usersController = require('../controllers/users.controllers');
+const requireAuth = require('../middleware/auth');
 
-var ctrlHotels = require('../controllers/hotels.controllers.js');
-var ctrlReviews = require('../controllers/reviews.controllers.js');
-var ctrlUsers = require('../controllers/users.controllers.js');
+module.exports = (config) => {
+  const router = express.Router();
+  const auth = requireAuth(config.jwtSecret);
+  const users = usersController(config);
 
-router
-    .route('/hotels')
-    .get(ctrlHotels.hotelsGetAll)
-    .post(ctrlHotels.hotelsAddOne);
-
-router
+  router.route('/hotels').get(hotels.hotelsGetAll).post(auth, hotels.hotelsAddOne);
+  router
     .route('/hotels/:hotelId')
-    .get(ctrlHotels.hotelsGetOne)
-    .put(ctrlHotels.hotelsUpdateOne)
-    .delete(ctrlHotels.hotelsDeleteOne)
+    .get(hotels.hotelsGetOne)
+    .put(auth, hotels.hotelsUpdateOne)
+    .delete(auth, hotels.hotelsDeleteOne);
 
-//Reviews routes  
-router
-  .route('/hotels/:hotelId/reviews')
-  .get(ctrlReviews.reviewsGetAll)
-  .post(ctrlUsers.authenticate ,ctrlReviews.reviewsAddOne);
+  router.route('/hotels/:hotelId/reviews').get(reviews.reviewsGetAll).post(auth, reviews.reviewsAddOne);
+  router
+    .route('/hotels/:hotelId/reviews/:reviewId')
+    .get(reviews.reviewsGetOne)
+    .put(auth, reviews.reviewsUpdateOne)
+    .delete(auth, reviews.reviewsDeleteOne);
 
-router
-  .route('/hotels/:hotelId/reviews/:reviewId')
-  .get(ctrlReviews.reviewsGetOne)
-  .put(ctrlReviews.reviewsUpdateOne)
-  .delete(ctrlReviews.reviewsDeleteOne);
+  router.post('/users/register', users.register);
+  router.post('/users/login', users.login);
 
-
-//Authentication
-router
-  .route('/users/register')
-  .post(ctrlUsers.register);
-
-router
-  .route('/users/login')
-  .post(ctrlUsers.login)
-
-module.exports = router;
+  return router;
+};

@@ -1,1 +1,9 @@
-node_module
+node_modules/
+# Built Angular app (npm run build)
+/public/
+client/.angular/
+coverage/
+.env
+*.log
+.DS_Store
+.vscode/
